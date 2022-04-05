@@ -15,7 +15,7 @@ const state = reactive({
 const getAllPublications = async () => {
 
     try {
-        const response = await fetch('https://vara.onrender.com/api/publications')
+        const response = await fetch('https://juhaniguru-web-nosql-python.onrender.com/api/publications')
         const data = await response.json()
         
         if(response.status > 300){
