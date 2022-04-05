@@ -1,16 +1,20 @@
 <script setup>
 
-import { reactive, ref } from 'vue';
+
+
 import PublicationView from './PublicationView.vue';
+import { publicationService } from '../../services/publicationService'
 /* import PublicationCreate from './PublicationCreate.vue'; */
 
+const { data, error, isFinished } = publicationService.useGetAll()
 
+/* 
 const publications = ref([])
 
 const state = reactive({
     error: false
-})
-
+}) */
+/* 
 
 const getAllPublications = async () => {
 
@@ -33,19 +37,20 @@ const getAllPublications = async () => {
     }
 }
 
-getAllPublications()
+getAllPublications() */
 
 
 </script>
 
 <template>    
-    <div v-if="state.error">
+    <div v-if="error">
         Valitettavasti postauksia ei ollut juuri nyt saatavilla
     </div>
+    <div v-if="!isFinished">Ladataan...</div>
     <template v-else>
         <div  class="container">            
             <!-- <PublicationCreate></PublicationCreate> -->    
-            <div class="item primary-color" v-for="publication in publications">        
+            <div class="item primary-color" v-for="publication in data.publications">        
                 <PublicationView :publication="publication"></PublicationView>
             </div>
         </div>
