@@ -1,29 +1,15 @@
 <script setup>
-    import { ref } from 'vue';
-    /* import PublicationViewAll from './components/publication/PublicationViewAll.vue'; */
 
-    import {RouterView} from 'vue-router'
-    import NavigationBar from './components/navigation/NavigationBar.vue';
+    import { ref } from 'vue';  
+    import { RouterView } from 'vue-router'
+    import BaseLayout from './components/layout/BaseLayout.vue';
 
     const color = ref('grey')
 
-    /* const toggleColor = () => {
-        color.value = color.value === 'grey' ? 'pink' : 'grey'
-    } */
 </script>
 
 <template>
-    <NavigationBar></NavigationBar>
-    <router-view></router-view>
-    <!-- <button @click="toggleColor">Vaihda väriä</button> -->
-    <!-- <PublicationViewAll></PublicationViewAll> -->
+    <BaseLayout>
+        <router-view></router-view>
+    </BaseLayout>    
 </template>
-
-<style>
-/* styleen tehdyt css elementit ovat käytössä kaikissa dokumenteissa*/
-
-.primary-color {
-    background-color: v-bind(color);
-}
-  
-</style>

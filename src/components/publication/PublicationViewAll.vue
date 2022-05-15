@@ -1,74 +1,43 @@
 <script setup>
 
-
-
 import PublicationView from './PublicationView.vue';
 import { publicationService } from '../../services/publicationService'
-/* import PublicationCreate from './PublicationCreate.vue'; */
+import { RouterLink } from 'vue-router';
 
-const { data, error, isFinished } = publicationService.useGetAll()
+import { ref } from "vue";
+import InfiniteLoading from "v3-infinite-loading";
+import "v3-infinite-loading/lib/style.css";
 
-/* 
-const publications = ref([])
+let publications = ref([]);
+let page = 1;
 
-const state = reactive({
-    error: false
-}) */
-/* 
+const load = async ($state) => {
 
-const getAllPublications = async () => {
-
-    try {
-        const response = await fetch('https://vara.onrender.com/api/publications')
-        const data = await response.json()
-        
-        if(response.status > 300){
-            if (response.status === 404) {
-                throw new Error("Dataa ei löytynyt")
-            }
-            throw new Error(data.msg)
-
-        }
-        publications.value = data.publications
-
-    } catch (e) {
-        console.error(e) // .log tai .warn tulostaa consoleen eri värillä
-        state.error = true
+    const { data, error } = await publicationService.useGetByPage(page)
+    
+    if (error.value) {
+        $state.error();
     }
+    if (data.value.publications.length < 5) {
+        $state.complete();
+    }
+    else {
+        publications.value.push(...data.value.publications);
+        $state.loaded();
+    }
+    page++;
+
 }
-
-getAllPublications() */
-
 
 </script>
 
-<template>    
-    <div v-if="error">
-        Valitettavasti postauksia ei ollut juuri nyt saatavilla
-    </div>
-    <div v-if="!isFinished">Ladataan...</div>
-    <template v-else>
-        <div  class="container">            
-            <!-- <PublicationCreate></PublicationCreate> -->    
-            <div class="item primary-color" v-for="publication in data.publications">        
+<template>
+    <h1>Julkaisut</h1>
+    <div class="result" v-for="publication in publications" :key="publication._id">
+        <router-link :to="`/publication/${publication._id}`">
                 <PublicationView :publication="publication"></PublicationView>
-            </div>
-        </div>
-    </template>
+        </router-link>
+    </div>
+    <InfiniteLoading :publications="publications" @infinite="load"></InfiniteLoading>
 </template>
 
-<style scoped>
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* background: rgb(197, 194, 194); */
-    margin: 20px;
-}
-
-</style>
